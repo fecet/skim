@@ -30,6 +30,7 @@ indexmap = "2.8.0"
 lazy_static = "1.2.0"
 log = "0.4.27"
 nix = { version = "0.29.0", default-features = false, features = ["fs"]}
+pinyin = "0.9"
 rand = "0.9.0"
 rayon = "1.5.3"
 regex = "1.6.0"

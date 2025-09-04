@@ -36,6 +36,7 @@ mod model;
 pub mod options;
 mod orderedvec;
 mod output;
+pub mod pinyin;
 pub mod prelude;
 mod previewer;
 mod query;

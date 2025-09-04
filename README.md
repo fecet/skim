@@ -388,6 +388,55 @@ For more details, check the man page (`man sk`).
 
 - `--ansi`: to parse ANSI color codes (e.g., `\e[32mABC`) of the data source
 - `--regex`: use the query as regular expression to match the data source
+- `--pinyin`: enable pinyin search for Chinese characters (requires `pinyin` feature)
+
+## Pinyin Search
+
+> **Note**: This feature requires skim to be built with the `pinyin` feature enabled.
+
+Skim supports searching Chinese characters using their pinyin pronunciation. When the `--pinyin` flag is enabled, Chinese characters are converted to pinyin for fuzzy matching while preserving the original display text.
+
+### Installation with Pinyin Support
+
+```bash
+# Install from crates.io with pinyin feature
+cargo install skim --features pinyin
+
+# Build from source with pinyin feature
+cargo build --release --features pinyin
+```
+
+### Usage Examples
+
+```bash
+# Enable pinyin search mode
+echo -e "你好世界\n测试pinyin\n中文搜索" | sk --pinyin
+
+# Filter mode with pinyin
+echo -e "你好世界\n测试pinyin\n中文搜索" | sk --pinyin --filter="nihao"
+# Output: 你好世界
+
+echo -e "你好世界\n测试pinyin\n中文搜索" | sk --pinyin --filter="ceshi" 
+# Output: 测试pinyin
+
+echo -e "你好世界\n测试pinyin\n中文搜索" | sk --pinyin --filter="zhongwen"
+# Output: 中文搜索
+```
+
+### Library Usage
+
+```rust
+use skim::prelude::*;
+
+// Enable pinyin in options
+let options = SkimOptionsBuilder::default()
+    .pinyin(true)  // Only available with pinyin feature
+    .build()
+    .unwrap();
+
+// Or wrap items manually
+let pinyin_item = PinyinItem::new(original_item);
+```
 
 # Advanced Topics
 
