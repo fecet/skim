@@ -11,7 +11,7 @@ use std::io::Cursor;
 #[cfg(feature = "pinyin")]
 pub fn main() {
     let options = SkimOptionsBuilder::default()
-        .height(Some("50%".to_string()))
+        .height("50%".to_string())
         .multi(true)
         .pinyin(true)  // Enable pinyin mode
         .build()
