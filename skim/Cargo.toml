@@ -33,6 +33,7 @@ fuzzy-matcher = { workspace = true }
 indexmap = { workspace = true }
 log = { workspace = true }
 nix = { workspace = true }
+pinyin = { version = "0.9", optional = true }
 rand = { workspace = true }
 rayon = { workspace = true }
 regex = { workspace = true }
@@ -49,3 +50,4 @@ which = { workspace = true }
 [features]
 default = ["cli"]
 cli = ["dep:clap", "dep:clap_complete", "dep:shlex", "dep:env_logger"]
+pinyin = ["dep:pinyin"]

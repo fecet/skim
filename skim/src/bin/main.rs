@@ -15,6 +15,28 @@ use std::{env, io};
 
 use skim::prelude::*;
 
+#[cfg(feature = "pinyin")]
+use crossbeam::channel::unbounded;
+
+#[cfg(feature = "pinyin")]
+use std::thread;
+
+#[cfg(feature = "pinyin")]
+fn wrap_items_with_pinyin(rx_item: SkimItemReceiver) -> SkimItemReceiver {
+    let (tx_pinyin, rx_pinyin) = unbounded();
+    
+    thread::spawn(move || {
+        while let Ok(item) = rx_item.recv() {
+            let pinyin_item: Arc<dyn SkimItem> = Arc::new(skim::pinyin::PinyinItem::new(item));
+            if tx_pinyin.send(pinyin_item).is_err() {
+                break;
+            }
+        }
+    });
+    
+    rx_pinyin
+}
+
 fn parse_args() -> Result<SkimOptions, Error> {
     let mut args = Vec::new();
 
@@ -114,10 +136,28 @@ fn sk_main() -> Result<i32, SkMainError> {
             None
         } else {
             let rx_item = cmd_collector.borrow().of_bufread(BufReader::new(std::io::stdin()));
+            
+            #[cfg(feature = "pinyin")]
+            let rx_item = if opts.pinyin {
+                wrap_items_with_pinyin(rx_item)
+            } else {
+                rx_item
+            };
+            
             Some(rx_item)
         };
         // filter mode
         if opts.filter.is_some() {
+            #[cfg(feature = "pinyin")]
+            let rx_item = if opts.pinyin && rx_item.is_some() {
+                Some(wrap_items_with_pinyin(rx_item.unwrap()))
+            } else {
+                rx_item
+            };
+            
+            #[cfg(not(feature = "pinyin"))]
+            let rx_item = rx_item;
+            
             return Ok(filter(&bin_options, &opts, rx_item));
         }
         Skim::run_with(&opts, rx_item)

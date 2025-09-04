@@ -5,6 +5,8 @@ pub use crate::helper::item_reader::{SkimItemReader, SkimItemReaderOption};
 pub use crate::helper::selector::DefaultSkimSelector;
 pub use crate::options::{SkimOptions, SkimOptionsBuilder};
 pub use crate::output::SkimOutput;
+#[cfg(feature = "pinyin")]
+pub use crate::pinyin::{PinyinItem, to_pinyin};
 pub use crate::previewer::PreviewCallback;
 pub use crate::*;
 pub use crossbeam::channel::{Receiver, Sender, bounded, unbounded};

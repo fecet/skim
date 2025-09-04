@@ -99,6 +99,14 @@ pub struct SkimOptions {
     #[cfg_attr(feature = "cli", arg(long, help_heading = "Search"))]
     pub min_query_length: Option<usize>,
 
+    /// Enable pinyin search for Chinese characters
+    ///
+    /// When enabled, Chinese characters will be converted to pinyin for fuzzy matching
+    /// while preserving the original display text
+    #[cfg(feature = "pinyin")]
+    #[cfg_attr(all(feature = "cli", feature = "pinyin"), arg(long, help_heading = "Search"))]
+    pub pinyin: bool,
+
     /// Do not sort the results
     ///
     /// *Often used in combination with `--tac`*
@@ -982,6 +990,8 @@ impl Default for SkimOptions {
         Self {
             tac: Default::default(),
             min_query_length: Default::default(),
+            #[cfg(feature = "pinyin")]
+            pinyin: Default::default(),
             no_sort: Default::default(),
             tiebreak: vec![RankCriteria::Score, RankCriteria::Begin, RankCriteria::End],
             nth: Default::default(),
